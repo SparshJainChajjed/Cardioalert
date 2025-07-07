@@ -27,4 +27,5 @@ CardioAlert is an Arduino-based prototype designed to continuously track a user'
 - Provides a foundation for future work on a more reliable, polished wearable device.
 
 This repository contains the early prototype code and is not intended for use in critical medical situations.
+The Arduino sketch is provided in `CardioAlert.ino`.
 
