@@ -3,7 +3,6 @@
 ## Problem Statement
 
 Heart-related emergencies can be fatal if help is not provided in time.
-
 Every second counts when it comes to cardiac arrest, yet many existing monitors are too complex or expensive for everyday use. CardioAlert aims to bridge this gap with accessible hardware and straightforward operation. People who are alone or far from medical facilities may not realize they are experiencing a dangerous cardiac event until it is too late. There is a need for a simple device that can detect abnormal heart rate patterns and automatically notify caregivers or emergency contacts with accurate location information.
 
 ## Solution
@@ -24,7 +23,6 @@ CardioAlert is an Arduino-based prototype designed to continuously track a user'
 
 - Successfully combined heart rate sensing, GSM messaging, and GPS tracking in a single prototype.
 - Demonstrated automated emergency notifications with location data using inexpensive hardware.
-- Provides a foundation for future work on a more reliable, polished wearable device.
+- Winner of 2nd place in HACK 2025
 
 This repository contains the early prototype code and is not intended for use in critical medical situations.
-
