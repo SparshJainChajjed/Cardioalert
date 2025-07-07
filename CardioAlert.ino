@@ -1,4 +1,6 @@
-// please keep in mind that this isnt the final vertion of the code,i still need to refine this to make a good,reliale prototype. this is just the base.hope you concider my project- sparsh jain 
+// Prototype code for the CardioAlert project.
+// Monitors heart rate and sends an SMS with GPS coordinates when
+// readings fall outside of a user-defined range.
 #include <SoftwareSerial.h>
 #include <TinyGPS++.h>
 
@@ -6,17 +8,19 @@ SoftwareSerial sim800(10, 11);
 SoftwareSerial gpsSerial(8, 9);
 TinyGPSPlus gps;
 
-const int pulsePin = A0;
+const int PULSE_PIN = A0;
 int heartRate = 0;
-int normalMin = 60;
-int normalMax = 100;
-String phoneNumber = "+1234567890";
-
+const int NORMAL_MIN_BPM = 60;
+const int NORMAL_MAX_BPM = 100;
+const unsigned long ALERT_DELAY_MS = 60000;  // 1 minute between alerts
+const unsigned long CHECK_INTERVAL_MS = 1000;
+const unsigned long GPS_READ_MS = 2000;
+const char PHONE_NUMBER[] = "+1234567890";
 void setup() {
   Serial.begin(115200);
   sim800.begin(9600);
   gpsSerial.begin(9600);
-  pinMode(pulsePin, INPUT);
+  pinMode(PULSE_PIN, INPUT);
   sendCommand("AT", 1000);
   sendCommand("AT+CMGF=1", 1000);
   Serial.println("Setup complete.");
@@ -26,24 +30,24 @@ void loop() {
   heartRate = readPulseSensor();
   Serial.print("Heart Rate: ");
   Serial.println(heartRate);
-  if (heartRate < normalMin || heartRate > normalMax) {
+  if (heartRate < NORMAL_MIN_BPM || heartRate > NORMAL_MAX_BPM) {
     Serial.println("Abnormal heart rate detected! Sending alert...");
     String gpsCoordinates = getGPSCoordinates();
     sendSMS(gpsCoordinates);
-    delay(60000);
+    delay(ALERT_DELAY_MS);
   }
-  delay(1000);
+  delay(CHECK_INTERVAL_MS);
 }
 
 int readPulseSensor() {
-  int sensorValue = analogRead(pulsePin);
+  int sensorValue = analogRead(PULSE_PIN);
   int bpm = map(sensorValue, 0, 1023, 50, 150);
   return bpm;
 }
 
 String getGPSCoordinates() {
   unsigned long startTime = millis();
-  while (millis() - startTime < 2000) {
+  while (millis() - startTime < GPS_READ_MS) {
     while (gpsSerial.available()) {
       char c = gpsSerial.read();
       gps.encode(c);
@@ -61,7 +65,7 @@ String getGPSCoordinates() {
 }
 
 void sendSMS(String gpsCoordinates) {
-  sim800.println("AT+CMGS=\"" + phoneNumber + "\"");
+  sim800.println("AT+CMGS=\"" + PHONE_NUMBER + "\"");
   delay(1000);
   sim800.print("ALERT! Abnormal heart rate detected.\n");
   sim800.print("Heart Rate: ");
